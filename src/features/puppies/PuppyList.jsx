@@ -1,20 +1,35 @@
 import { useGetPuppiesQuery } from "./puppySlice";
+import { useState } from "react";
+import { Link } from "react-router-dom";
 /**
  * @component
  * Shows a list of puppies in the roster.
  * Users can select a puppy to see more information about it.
  */
 export default function PuppyList({ setSelectedPuppyId }) {
-  // TODO: Get data from getPuppies query
+  const [ puppySearch, setPuppySearch ] = useState("");
 
-  const {data: puppies, isLoading} = useGetPuppiesQuery();
-  console.log(puppies)
+  const { data: puppies, isLoading } = useGetPuppiesQuery();
+  const filteredPuppies = puppies && Array.isArray(puppies) ? puppies.filter(puppy =>
+  puppy.name && puppy.name.toLowerCase().includes(puppySearch.toLowerCase()) //makes it so the puppies names do not have to be uppercase
+  )
+  : [];
   return (
     <article>
       <h2>Roster</h2>
+      {/* adding the following for the search */}
+      <input
+        type="text"
+        placeholder="puppySearch"
+        value={puppySearch}
+        onChange={(e) => setPuppySearch(e.target.value)}
+      />
       <ul className="puppies">
         {isLoading && <li>Loading puppies...</li>}
-        {puppies?.data?.players.map((p) => (
+        {filteredPuppies?.length === 0 && (
+          <li>No puppies with that name, please try again.</li>
+        )}
+        {filteredPuppies?.map((p) => (
           <li key={p.id}>
             <h3>
               {p.name} #{p.id}
@@ -22,9 +37,8 @@ export default function PuppyList({ setSelectedPuppyId }) {
             <figure>
               <img src={p.imageUrl} alt={p.name} />
             </figure>
-            <button onClick={() => setSelectedPuppyId(p.id)}>
-              See details
-            </button>
+            <Link to={`/puppy/${p.id}`}>See details</Link>
+            <button onClick={() => setSelectedPuppyId(puppy.id)}>See puppy Details</button>
           </li>
         ))}
       </ul>
