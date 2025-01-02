@@ -20,12 +20,15 @@ const puppyApi = api.injectEndpoints({
       query: () => "/players",
       providesTags: ["Puppy"],
       transformResponse: (response) => {
-        return response?.data || []
+        return response?.data || [];
       },
     }),
     getPuppy: build.query({
-      query: (id) => `/puppy/${id}`,
+      query: (id) => `/players/${id}`,
       providesTags: ["Puppy"],
+      transformResponse: (response) => {
+        return response?.data || {};
+      },
     }),
     addPuppy: build.mutation({
       query: (addPuppy) => ({
@@ -51,3 +54,5 @@ export const {
   useAddPuppyMutation,
   useDeletePuppyMutation,
 } = puppyApi;
+
+export default puppyApi;

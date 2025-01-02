@@ -6,14 +6,17 @@ import { Link } from "react-router-dom";
  * Shows a list of puppies in the roster.
  * Users can select a puppy to see more information about it.
  */
-export default function PuppyList({ setSelectedPuppyId }) {
-  const [ puppySearch, setPuppySearch ] = useState("");
+export default function PuppyList() {
+  const [puppySearch, setPuppySearch] = useState("");
 
   const { data: puppies, isLoading } = useGetPuppiesQuery();
-  const filteredPuppies = puppies && Array.isArray(puppies) ? puppies.filter(puppy =>
-  puppy.name && puppy.name.toLowerCase().includes(puppySearch.toLowerCase()) //makes it so the puppies names do not have to be uppercase
-  )
-  : [];
+  console.log(puppies);
+  const filteredPuppies =
+    puppies?.players?.filter(
+      (puppy) =>
+        puppy.name &&
+        puppy.name.toLowerCase().includes(puppySearch.toLowerCase()) //makes it so the puppies names do not have to be uppercase
+    ) || [];
   return (
     <article>
       <h2>Roster</h2>
@@ -38,7 +41,7 @@ export default function PuppyList({ setSelectedPuppyId }) {
               <img src={p.imageUrl} alt={p.name} />
             </figure>
             <Link to={`/puppy/${p.id}`}>See details</Link>
-            <button onClick={() => setSelectedPuppyId(puppy.id)}>See puppy Details</button>
+          
           </li>
         ))}
       </ul>
